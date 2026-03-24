@@ -3,8 +3,11 @@ public class Main {
     public static void main(String[] args) {
 
         Library lib = new Library();
+        Book book = new Book();
 
         while (true) {
+            Input.getUserString("Enter the name of the book");
+
 
             // Advance time
             lib.currentDay = lib.currentDay + 1;
