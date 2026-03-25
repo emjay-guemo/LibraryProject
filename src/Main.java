@@ -19,7 +19,7 @@ public class Main {
             // simulate a random event
             int randomNumber = Rand.randomInt(0, 51); // could generate 0, 1... 25... up to 50.
 
-            
+
             switch (randomNumber) {
 
 
