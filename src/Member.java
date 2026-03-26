@@ -1,13 +1,16 @@
-// Class that defines what a member is
-
 public class Member {
 
-    // Each member will have an id and a name
-    int id;
     String name;
+    int memberID;
 
-    public Member(int id, String name) {
-        this.id = id;
+    public Member(String name, int memberID) {
+        this.memberID = memberID;
         this.name = name;
     }
+
+    //Simple method that we use in library to display all the current members
+    public void displayInfo() {
+        System.out.println("ID: " + memberID + ", Name: " + name);
+    }
 }
+
