@@ -7,8 +7,4 @@ public class Book {
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;
     }
-
-    public void displayBookInfo(){
-        System.out.println("Book Title:" + bookName + ", Author: " + bookAuthor );
-    }
 }
