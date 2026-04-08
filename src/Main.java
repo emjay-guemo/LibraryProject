@@ -57,7 +57,7 @@ public class Main {
                 lib.members.add(newMember);
 
                 System.out.println(" ");
-                System.out.println(newName + " joined the library!");
+                System.out.println(newMember.getName() + " joined the library!");
             } else {
                 System.out.println(" ");
                 System.out.println("No new members joined today.");
@@ -100,7 +100,7 @@ public class Main {
                 int currentBooks = 0;
 
                 for (Loan l : loans) {
-                    if (l.memberID == selectedMember.memberID && !l.returned) {
+                    if (l.memberID == selectedMember.getMemberID() && !l.returned) {
                         currentBooks++;
                     }
                 }
@@ -136,8 +136,8 @@ public class Main {
 
                             Loan loan = new Loan();
 
-                            loan.memberName = selectedMember.name;
-                            loan.memberID = selectedMember.memberID;
+                            loan.memberName = selectedMember.getName();
+                            loan.memberID = selectedMember.getMemberID();
 
                             loan.bookName = selectedBook.bookName;
 
@@ -153,14 +153,14 @@ public class Main {
                             int memberLoanCount = 0;
 
                             for (Loan l : loans) {
-                                if (l.memberID == selectedMember.memberID) {
+                                if (l.memberID == selectedMember.getMemberID()) {
                                     memberLoanCount++;
                                 }
                             }
 
                             if (memberLoanCount > topMemberLoans) {
                                 topMemberLoans = memberLoanCount;
-                                topMember = selectedMember.name;
+                                topMember = selectedMember.getName();
                             }
 
                             // -------------------------------
@@ -179,8 +179,7 @@ public class Main {
                                 mostBorrowedBook = selectedBook.bookName;
                             }
 
-                            System.out.println(selectedMember.name +
-                                    " borrowed \"" + selectedBook.bookName + "\"");
+                            System.out.println(selectedMember.getName() + " borrowed \"" + selectedBook.bookName + "\"");
                         }
                     }
                 }
