@@ -76,11 +76,11 @@ public class Main {
                 // removes the book and author from being chosen again
                 lib.bookPool.remove(bookIndex);
 
-                Book storedBook = new Book(storedNewBook.bookName, storedNewBook.bookName);
+                Book storedBook = new Book(storedNewBook.getBookName(), storedNewBook.getBookAuthor());
                 lib.bookPool.add(storedBook);
 
                 System.out.println(" ");
-                System.out.println(storedBook.bookName +  "by " + storedBook.bookAuthor + " stored in the library!");
+                System.out.println(storedBook.getBookName() +  "by " + storedBook.getBookAuthor() + " stored in the library!");
             }
             else {
                 System.out.println(" ");
@@ -121,7 +121,7 @@ public class Main {
                         Book selectedBook = null;
 
                         for (Book b : lib.books) {
-                            if (b.isAvailable) {
+                            if (b.isAvailable()) {
                                 selectedBook = b;
                                 break;
                             }
@@ -132,14 +132,14 @@ public class Main {
                         // -------------------------------
                         if (selectedBook != null) {
 
-                            selectedBook.isAvailable = false;
+                            selectedBook.borrowBook();
 
                             Loan loan = new Loan();
 
-                            loan.memberName = selectedMember.getName();
+                            loan.getMemberName() = selectedMember.getName();
                             loan.memberID = selectedMember.getMemberID();
 
-                            loan.bookName = selectedBook.bookName;
+                            loan.bookName = selectedBook.getBookName();
 
                             loan.dayBorrowed = lib.currentDay;
                             loan.daysKept = 0;
@@ -169,17 +169,17 @@ public class Main {
                             int bookCount = 0;
 
                             for (Loan l : loans) {
-                                if (l.bookName.equals(selectedBook.bookName)) {
+                                if (l.bookName.equals(selectedBook.getBookName())) {
                                     bookCount++;
                                 }
                             }
 
                             if (bookCount > mostBorrowedCount) {
                                 mostBorrowedCount = bookCount;
-                                mostBorrowedBook = selectedBook.bookName;
+                                mostBorrowedBook = selectedBook.getBookName();
                             }
 
-                            System.out.println(selectedMember.getName() + " borrowed \"" + selectedBook.bookName + "\"");
+                            System.out.println(selectedMember.getName() + " borrowed \"" + selectedBook.getBookName() + "\"");
                         }
                     }
                 }
@@ -214,18 +214,18 @@ public class Main {
 
                         // Find the book and make it available again
                         for (Book b : lib.books) {
-                            if (b.bookName.equals(loan.bookName) && !b.isAvailable) {
-                                b.isAvailable = true;
+                            if (b.getBookName().equals(loan.bookName) && !b.isAvailable()) {
+                                b.returnBook();
                                 break;
                             }
                         }
 
-                        System.out.println(loan.memberName + " returned \"" + loan.bookName + "\"");
+                        System.out.println(loan.getMemberName() + " returned \"" + loan.bookName + "\"");
 
                     } else {
 
                         // Show how long they have had the book
-                        System.out.println(loan.memberName +
+                        System.out.println(loan.getMemberName() +
                                 " has \"" + loan.bookName +
                                 "\" for " + loan.daysKept + " days");
 
@@ -235,7 +235,7 @@ public class Main {
                             int overdueDays = loan.daysKept - loan.maxDays;
                             int fee = overdueDays * loan.feePerDay;
 
-                            System.out.println("Overdue! " + loan.memberName +
+                            System.out.println("Overdue! " + loan.getMemberName() +
                                     " owes $" + fee);
                             totalFees += fee; // add daily fee to total
                         }
@@ -287,7 +287,7 @@ public class Main {
             for (Book b : lib.books) {
 
                 // Check if the book matches this title AND is still available
-                if (b.bookName.equals(currentTitle) && b.isAvailable) {
+                if (b.getBookName().equals(currentTitle) && b.isAvailable()) {
                     availableCount++;
                 }
             }
