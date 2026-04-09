@@ -100,7 +100,7 @@ public class Main {
                 int currentBooks = 0;
 
                 for (Loan l : loans) {
-                    if (l.memberID == selectedMember.getMemberID() && !l.returned) {
+                    if (l.getMembID() == selectedMember.getMemberID() && !l.returned) {
                         currentBooks++;
                     }
                 }
@@ -136,8 +136,8 @@ public class Main {
 
                             Loan loan = new Loan();
 
-                            loan.memberName = selectedMember.getName();
-                            loan.memberID = selectedMember.getMemberID();
+                            loan.storeMemberName(selectedMember.getName());
+                            loan.storeMemId(selectedMember.getMemberID());
 
                             loan.bookName = selectedBook.bookName;
 
@@ -153,7 +153,7 @@ public class Main {
                             int memberLoanCount = 0;
 
                             for (Loan l : loans) {
-                                if (l.memberID == selectedMember.getMemberID()) {
+                                if (l.getMembID() == selectedMember.getMemberID()) {
                                     memberLoanCount++;
                                 }
                             }
@@ -220,12 +220,12 @@ public class Main {
                             }
                         }
 
-                        System.out.println(loan.memberName + " returned \"" + loan.bookName + "\"");
+                        System.out.println(loan.getMemberName() + " returned \"" + loan.bookName + "\"");
 
                     } else {
 
                         // Show how long they have had the book
-                        System.out.println(loan.memberName +
+                        System.out.println(loan.getMemberName() +
                                 " has \"" + loan.bookName +
                                 "\" for " + loan.daysKept + " days");
 
@@ -235,7 +235,7 @@ public class Main {
                             int overdueDays = loan.daysKept - loan.maxDays;
                             int fee = overdueDays * loan.feePerDay;
 
-                            System.out.println("Overdue! " + loan.memberName +
+                            System.out.println("Overdue! " + loan.getMemberName() +
                                     " owes $" + fee);
                             totalFees += fee; // add daily fee to total
                         }
