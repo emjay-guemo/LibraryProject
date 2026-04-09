@@ -100,7 +100,7 @@ public class Main {
                 int currentBooks = 0;
 
                 for (Loan l : loans) {
-                    if (l.memberID == selectedMember.getMemberID() && !l.returned) {
+                    if (l.getMembID() == selectedMember.getMemberID() && !l.returned) {
                         currentBooks++;
                     }
                 }
@@ -137,7 +137,11 @@ public class Main {
                             Loan loan = new Loan();
 
                             loan.getMemberName() = selectedMember.getName();
-                            loan.memberID = selectedMember.getMemberID();
+                            loan.getMembID() = selectedMember.getMemberID();
+
+                            loan.storeMemberName(selectedMember.getName());
+                            loan.storeMemId(selectedMember.getMemberID());
+
 
                             loan.bookName = selectedBook.getBookName();
 
@@ -153,7 +157,7 @@ public class Main {
                             int memberLoanCount = 0;
 
                             for (Loan l : loans) {
-                                if (l.memberID == selectedMember.getMemberID()) {
+                                if (l.getMembID() == selectedMember.getMemberID()) {
                                     memberLoanCount++;
                                 }
                             }

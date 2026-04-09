@@ -2,7 +2,7 @@
 public class Loan {
 
     private String memberName;  // Who borrowed the book
-    int memberID;
+    private int memberID;
 
     int dayBorrowed;    //What day they took the book
     int daysKept;   // How many days they borrowed it
@@ -16,11 +16,23 @@ public class Loan {
 
     boolean returned;// Whether book is returned or not
 
+    // Setter Methods //
+    public void storeMemberName(String memberName){
+        this.memberName = memberName;
+    }
+
+    public void storeMemId(int memberID){
+        this.memberID = memberID;
+    }
+
+
+    // Getter Methods //
     public String getMemberName(){
         return memberName;
     }
 
-    public int getMemberID(){
+    public int getMembID(){
         return memberID;
     }
+
 }
