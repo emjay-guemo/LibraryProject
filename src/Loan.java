@@ -1,7 +1,7 @@
 // Loan class holds all info and data about loans and fees
 public class Loan {
 
-    String memberName;  // Who borrowed the book
+    private String memberName;  // Who borrowed the book
     int memberID;
 
     int dayBorrowed;    //What day they took the book
@@ -14,5 +14,13 @@ public class Loan {
 
     int memberBookCount; // Tracks how many books this member has currently taken out
 
-    boolean returned;   // Whether book is returned or not
+    boolean returned;// Whether book is returned or not
+
+    public String getMemberName(){
+        return memberName;
+    }
+
+    public int getMemberID(){
+        return memberID;
+    }
 }
