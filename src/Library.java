@@ -85,7 +85,7 @@ class Library {
             Book newBook = new Book(bookName, bookAuthor);
 
             // Mark book as available when added
-            newBook.isAvailable = true;
+            newBook.setAvailablity(true);
 
             // Add book to library collection
             books.add(newBook);
@@ -121,7 +121,7 @@ class Library {
             int count = 0;
 
             for (Book b : books) {
-                if (b.bookName.equals(currentTitle)) {
+                if (b.getBookName().equals(currentTitle)) {
                     count++;
                 }
             }

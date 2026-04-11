@@ -100,7 +100,7 @@ public class Main {
                 int currentBooks = 0;
 
                 for (Loan l : loans) {
-                    if (l.getMembID() == selectedMember.getMemberID() && !l.returned) {
+                    if (l.getMembID() == selectedMember.getMemberID() && !l.isReturned()) {
                         currentBooks++;
                     }
                 }
@@ -136,18 +136,14 @@ public class Main {
 
                             Loan loan = new Loan();
 
-                            loan.getMemberName() = selectedMember.getName();
-                            loan.getMembID() = selectedMember.getMemberID();
-
                             loan.storeMemberName(selectedMember.getName());
                             loan.storeMemId(selectedMember.getMemberID());
 
+                            loan.storeBookName(selectedBook.getBookName());
 
-                            loan.bookName = selectedBook.getBookName();
-
-                            loan.dayBorrowed = lib.currentDay;
-                            loan.daysKept = 0;
-                            loan.returned = false;
+                            loan.storeDayBorrowed(lib.currentDay);
+                            loan.storeDaysKept(0);
+                            loan.setReturned(false);
 
                             loans.add(loan);
 
@@ -173,7 +169,7 @@ public class Main {
                             int bookCount = 0;
 
                             for (Loan l : loans) {
-                                if (l.bookName.equals(selectedBook.getBookName())) {
+                                if (l.getBookName().equals(selectedBook.getBookName())) {
                                     bookCount++;
                                 }
                             }
@@ -195,18 +191,18 @@ public class Main {
             for (Loan loan : loans) {
 
                 // Only update if book not returned
-                if (!loan.returned) {
+                if (!loan.isReturned()) {
 
-                    loan.daysKept++;
+                    loan.increaseDaysKept(-1); // Makes sure the loan starts at day 0 instead of day 1.
 
                     int chance;
 
                     // Increasing probability of return as they have the book longer
-                    if (loan.daysKept == 1) chance = 5;
-                    else if (loan.daysKept == 2) chance = 10;
-                    else if (loan.daysKept == 3) chance = 20;
-                    else if (loan.daysKept == 4) chance = 30;
-                    else if(loan.daysKept == 5) chance = 45;
+                    if (loan.getDaysKept() == 1) chance = 5;
+                    else if (loan.getDaysKept() == 2) chance = 10;
+                    else if (loan.getDaysKept() == 3) chance = 20;
+                    else if (loan.getDaysKept() == 4) chance = 30;
+                    else if(loan.getDaysKept() == 5) chance = 45;
                     else chance = 65;
 
                     int roll = Rand.randomInt(1, 101);
@@ -214,29 +210,29 @@ public class Main {
                     // BOOK RETURNED
                     if (roll <= chance) {
 
-                        loan.returned = true;
+                        loan.setReturned(true);
 
                         // Find the book and make it available again
                         for (Book b : lib.books) {
-                            if (b.getBookName().equals(loan.bookName) && !b.isAvailable()) {
+                            if (b.getBookName().equals(loan.getBookName()) && !b.isAvailable()) {
                                 b.returnBook();
                                 break;
                             }
                         }
 
-                        System.out.println(loan.getMemberName() + " returned \"" + loan.bookName + "\"");
+                        System.out.println(loan.getMemberName() + " returned \"" + loan.getBookName() + "\"");
 
                     } else {
 
                         // Show how long they have had the book
                         System.out.println(loan.getMemberName() +
-                                " has \"" + loan.bookName +
-                                "\" for " + loan.daysKept + " days");
+                                " has \"" + loan.getBookName() +
+                                "\" for " + loan.getDaysKept() + " days");
 
                         // OVERDUE CHECK
-                        if (loan.daysKept > loan.maxDays) {
+                        if (loan.getDaysKept() > loan.maxDays) {
 
-                            int overdueDays = loan.daysKept - loan.maxDays;
+                            int overdueDays = loan.getDaysKept() - loan.maxDays;
                             int fee = overdueDays * loan.feePerDay;
 
                             System.out.println("Overdue! " + loan.getMemberName() +
@@ -309,7 +305,7 @@ public class Main {
         int activeLoans = 0;
 
         for (Loan loan : loans) {
-            if (loan.returned) {
+            if (loan.isReturned()) {
                 returnedLoans++;
             } else {
                 activeLoans++;
