@@ -22,16 +22,16 @@ public class Main {
         int mostBorrowedCount = 0;
 
         // Run simulation for 14 days
-        while (lib.currentDay < 14) {
+        while (lib.getCurrentDay() < 14) {
 
             // Move to next day
-            lib.currentDay = lib.currentDay + 1;
+            lib.increaseCurrentDay(0);
 
-            System.out.println("\n--- Day " + lib.currentDay + " ---");
+            System.out.println("\n--- Day " + lib.getCurrentDay() + " ---");
             System.out.println(" ");
 
             // Midway message
-            if (lib.currentDay == 7) {
+            if (lib.getCurrentDay() == 7) {
                 System.out.println("It has now officially been 7 days in the Life of a Library");
             }
 
@@ -141,7 +141,7 @@ public class Main {
 
                             loan.storeBookName(selectedBook.getBookName());
 
-                            loan.storeDayBorrowed(lib.currentDay);
+                            loan.storeDayBorrowed(lib.getCurrentDay());
                             loan.storeDaysKept(0);
                             loan.setReturned(false);
 
@@ -230,10 +230,10 @@ public class Main {
                                 "\" for " + loan.getDaysKept() + " days");
 
                         // OVERDUE CHECK
-                        if (loan.getDaysKept() > loan.maxDays) {
+                        if (loan.getDaysKept() > loan.getMaxDays()) {
 
-                            int overdueDays = loan.getDaysKept() - loan.maxDays;
-                            int fee = overdueDays * loan.feePerDay;
+                            int overdueDays = loan.getDaysKept() - loan.getMaxDays();
+                            int fee = overdueDays * loan.getFeePerDay();
 
                             System.out.println("Overdue! " + loan.getMemberName() +
                                     " owes $" + fee);

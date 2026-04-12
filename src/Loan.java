@@ -9,8 +9,8 @@ public class Loan {
 
     private String bookName; // stores the name of the borrowed book
 
-    int maxDays = 3;    // Maximum days they can keep the book without getting fined
-    int feePerDay = 5;  // Fee per extra day
+    private int maxDays;    // Maximum days they can keep the book without getting fined
+    private int feePerDay;  // Fee per extra day
 
     private int memberBookCount; // Tracks how many books this member has currently taken out
 
@@ -45,6 +45,14 @@ public class Loan {
         this.memberBookCount = memberBookCount;
     }
 
+    public void setMaxDays(){
+        this.maxDays = 3;
+    }
+
+    public void setFeePerDay(){
+        this.feePerDay = 5;
+    }
+
     // Getter Methods //
     public String getMemberName(){
         return memberName;
@@ -72,6 +80,14 @@ public class Loan {
 
     public int getMemberBookCount() {
         return memberBookCount;
+    }
+
+    public int getMaxDays(){
+        return maxDays;
+    }
+
+    public int getFeePerDay(){
+        return feePerDay;
     }
 
     // other methods

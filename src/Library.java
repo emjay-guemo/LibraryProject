@@ -3,7 +3,19 @@ import java.util.ArrayList;
 // Represents the entire library system
 class Library {
 
-    int currentDay; // Tracks the current day in the simulation
+    private int currentDay; // Tracks the current day in the simulation
+
+    public void storeCurrentDay(int currentDay){
+        this.currentDay = currentDay;
+    }
+
+    public int getCurrentDay(){
+        return currentDay;
+    }
+
+    public void increaseCurrentDay(int currentDay){
+        this.currentDay++;
+    }
 
     ArrayList<Member> members; // Stores all library members
     ArrayList<Book> books;     // Stores all books in the library
