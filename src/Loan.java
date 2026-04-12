@@ -1,76 +1,58 @@
-// Loan class holds all info and data about loans and fees
+// Loan class represents a single borrowing event in the library
+// It stores all information related to one borrowed book and handles logic like overdue fees
+
 public class Loan {
 
-    private String memberName;  // Who borrowed the book
-    private int memberID;
+    // -------------------------------
+    // Private Fields (Encapsulation)
+    // -------------------------------
+    private String memberName;   // Name of the member who borrowed the book
+    private int memberID;        // ID of the member
 
-    private int dayBorrowed;    //What day they took the book
-    private int daysKept;   // How many days they borrowed it
+    private String bookName;     // Name of the borrowed book
 
-    private String bookName; // stores the name of the borrowed book
+    private int dayBorrowed;     // Day the book was borrowed
+    private int daysKept;        // How long the book has been kept
 
-    private int maxDays;    // Maximum days they can keep the book without getting fined
-    private int feePerDay;  // Fee per extra day
+    private int maxDays;         // Max days before overdue
+    private int feePerDay;       // Fee charged per overdue day
 
-    private int memberBookCount; // Tracks how many books this member has currently taken out
+    private boolean returned;    // Whether the book has been returned
 
-    private boolean returned;// Whether book is returned or not
 
-    // Setter Methods //
-    public void storeMemberName(String memberName){
+    // -------------------------------
+    // Constructor (Abstraction)
+    // -------------------------------
+    public Loan(String memberName, int memberID, String bookName, int dayBorrowed) {
         this.memberName = memberName;
-    }
-
-    public void storeMemId(int memberID){
         this.memberID = memberID;
-    }
-
-    public void setReturned(boolean returned){
-        this.returned = returned;
-    }
-
-    public void storeBookName(String bookName){
         this.bookName = bookName;
-    }
-
-    public void storeDayBorrowed(int dayBorrowed){
         this.dayBorrowed = dayBorrowed;
+
+        this.daysKept = 0;
+        this.returned = false;
+
+        this.maxDays = 3;     // default rule
+        this.feePerDay = 5;   // default rule
     }
 
-    public void storeDaysKept(int daysKept){
-        this.daysKept = daysKept;
-    }
 
-    public void storeMemberBookCount(int memberBookCount){
-        this.memberBookCount = memberBookCount;
-    }
-
-    public void setMaxDays(){
-        this.maxDays = 3;
-    }
-
-    public void setFeePerDay(){
-        this.feePerDay = 5;
-    }
-
-    // Getter Methods //
-    public String getMemberName(){
+    // -------------------------------
+    // Getter Methods (Controlled Access)
+    // -------------------------------
+    public String getMemberName() {
         return memberName;
     }
 
-    public int getMembID(){
+    public int getMemberID() {
         return memberID;
     }
 
-    public boolean isReturned(){
-        return returned;
-    }
-
-    public String getBookName(){
+    public String getBookName() {
         return bookName;
     }
 
-    public int getDayBorrowed(){
+    public int getDayBorrowed() {
         return dayBorrowed;
     }
 
@@ -78,20 +60,56 @@ public class Loan {
         return daysKept;
     }
 
-    public int getMemberBookCount() {
-        return memberBookCount;
+    public boolean isReturned() {
+        return returned;
     }
 
-    public int getMaxDays(){
+    public int getMaxDays() {
         return maxDays;
     }
 
-    public int getFeePerDay(){
+    public int getFeePerDay() {
         return feePerDay;
     }
 
-    // other methods
-    public void increaseDaysKept(int daysKept){
-        this.daysKept++;
-    } // increases the days that the member has the book for
+
+    // -------------------------------
+    // Setters
+    // -------------------------------
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
+
+
+    // -------------------------------
+    // Abstraction Methods
+    // -------------------------------
+
+    // Increases how long the book has been kept
+    public void updateDay() {
+        daysKept++;
+    }
+
+    // Determines if the book is overdue
+    public boolean isOverdue() {
+        return daysKept > maxDays;
+    }
+
+    // Calculates overdue fee
+    public int calculateFee() {
+        if (!isOverdue()) return 0;
+
+        int overdueDays = daysKept - maxDays;
+        return overdueDays * feePerDay;
+    }
+
+    // Determines chance of returning book based on time kept
+    public int getReturnChance() {
+        if (daysKept == 1) return 5;
+        else if (daysKept == 2) return 10;
+        else if (daysKept == 3) return 20;
+        else if (daysKept == 4) return 30;
+        else if (daysKept == 5) return 45;
+        else return 65;
+    }
 }

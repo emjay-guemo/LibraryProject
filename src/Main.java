@@ -15,17 +15,14 @@ public class Main {
         // -------------------------------
         // Tracking for Statistics
         // -------------------------------
-        String topMember = "";
-        int topMemberLoans = 0;
-
-        String mostBorrowedBook = "";
-        int mostBorrowedCount = 0;
+        String[] topMemberData = {"", "0"};
+        String[] mostBorrowedData = {"", "0"};
 
         // Run simulation for 14 days
         while (lib.getCurrentDay() < 14) {
 
             // Move to next day
-            lib.increaseCurrentDay(0);
+            lib.increaseCurrentDay();
 
             System.out.println("\n--- Day " + lib.getCurrentDay() + " ---");
             System.out.println(" ");
@@ -46,18 +43,9 @@ public class Main {
             // -------------------------------
             if (randomMember == 0) {
 
-                int newID = lib.members.size() + 1;
-                // Pick random name from available pool
-                int nameIndex = Rand.randomInt(0, lib.names.size());
-                String newName = lib.names.get(nameIndex);
-
-                lib.names.remove(nameIndex);
-
-                Member newMember = new Member(newName, newID);
-                lib.members.add(newMember);
-
                 System.out.println(" ");
-                System.out.println(newMember.getName() + " joined the library!");
+                lib.addRandomMember();
+
             } else {
                 System.out.println(" ");
                 System.out.println("No new members joined today.");
@@ -67,123 +55,19 @@ public class Main {
             // New Book Stored in library simulation
             //----------------------
 
-            if (randomNewBook == 0){
-                int newBook = lib.books.size() + 1;
-                // Picking random book from the available pool
-                int bookIndex = Rand.randomInt(0, lib.bookPool.size());
-                Book storedNewBook = lib.bookPool.get(bookIndex);
-
-                // removes the book and author from being chosen again
-                lib.bookPool.remove(bookIndex);
-
-                Book storedBook = new Book(storedNewBook.getBookName(), storedNewBook.getBookAuthor());
-                lib.bookPool.add(storedBook);
-
+            if (randomNewBook == 0) {
                 System.out.println(" ");
-                System.out.println(storedBook.getBookName() +  "by " + storedBook.getBookAuthor() + " stored in the library!");
-            }
-            else {
+                lib.addRandomBook();
+            } else {
                 System.out.println(" ");
-                System.out.println("No new books was added to the library today");
+                System.out.println("No new books were added to the library today");
             }
 
             // -------------------------------
             // Borrow Book Section
             // -------------------------------
-            // Each member has a 25% chance to borrow a book BUT can only have a maximum of 3 books at once
 
-            for (Member selectedMember : lib.members) {
-
-                // -------------------------------
-                // STEP 1:Count books
-                // -------------------------------
-                int currentBooks = 0;
-
-                for (Loan l : loans) {
-                    if (l.getMembID() == selectedMember.getMemberID() && !l.isReturned()) {
-                        currentBooks++;
-                    }
-                }
-
-                // -------------------------------
-                // STEP 2: Check if member can borrow
-                // -------------------------------
-                if (currentBooks < 3) {
-
-                    // 25% chance to attempt borrowing
-                    int chance = Rand.randomInt(0, 4);
-
-                    if (chance == 1) {
-
-                        // -------------------------------
-                        // STEP 3: Find available book
-                        // -------------------------------
-                        Book selectedBook = null;
-
-                        for (Book b : lib.books) {
-                            if (b.isAvailable()) {
-                                selectedBook = b;
-                                break;
-                            }
-                        }
-
-                        // -------------------------------
-                        // STEP 4: Create loan if book exists
-                        // -------------------------------
-                        if (selectedBook != null) {
-
-                            selectedBook.borrowBook();
-
-                            Loan loan = new Loan();
-
-                            loan.storeMemberName(selectedMember.getName());
-                            loan.storeMemId(selectedMember.getMemberID());
-
-                            loan.storeBookName(selectedBook.getBookName());
-
-                            loan.storeDayBorrowed(lib.getCurrentDay());
-                            loan.storeDaysKept(0);
-                            loan.setReturned(false);
-
-                            loans.add(loan);
-
-                            // -------------------------------
-                            // Track most active member
-                            // -------------------------------
-                            int memberLoanCount = 0;
-
-                            for (Loan l : loans) {
-                                if (l.getMembID() == selectedMember.getMemberID()) {
-                                    memberLoanCount++;
-                                }
-                            }
-
-                            if (memberLoanCount > topMemberLoans) {
-                                topMemberLoans = memberLoanCount;
-                                topMember = selectedMember.getName();
-                            }
-
-                            // -------------------------------
-                            // Track most borrowed book
-                            // -------------------------------
-                            int bookCount = 0;
-
-                            for (Loan l : loans) {
-                                if (l.getBookName().equals(selectedBook.getBookName())) {
-                                    bookCount++;
-                                }
-                            }
-
-                            if (bookCount > mostBorrowedCount) {
-                                mostBorrowedCount = bookCount;
-                                mostBorrowedBook = selectedBook.getBookName();
-                            }
-
-                            System.out.println(selectedMember.getName() + " borrowed \"" + selectedBook.getBookName() + "\"");
-                        }
-                    }
-                }
-            }
+            lib.processBorrowing(loans, topMemberData, mostBorrowedData);
 
             // Daily Loan Updates
             System.out.println("\n--- Loan Updates ---");
@@ -193,9 +77,9 @@ public class Main {
                 // Only update if book not returned
                 if (!loan.isReturned()) {
 
-                    loan.increaseDaysKept(-1); // Makes sure the loan starts at day 0 instead of day 1.
+                    loan.updateDay();
 
-                    int chance;
+                    int chance = loan.getReturnChance();
 
                     // Increasing probability of return as they have the book longer
                     if (loan.getDaysKept() == 1) chance = 5;
@@ -230,14 +114,13 @@ public class Main {
                                 "\" for " + loan.getDaysKept() + " days");
 
                         // OVERDUE CHECK
-                        if (loan.getDaysKept() > loan.getMaxDays()) {
+                        if (loan.isOverdue()) {
 
-                            int overdueDays = loan.getDaysKept() - loan.getMaxDays();
-                            int fee = overdueDays * loan.getFeePerDay();
+                            int fee = loan.calculateFee();
 
                             System.out.println("Overdue! " + loan.getMemberName() +
                                     " owes $" + fee);
-                            totalFees += fee; // add daily fee to total
+                            totalFees += fee;
                         }
                     }
                 }
@@ -322,11 +205,11 @@ public class Main {
         // -------------------------------
         System.out.println("\n===== LIBRARY STATISTICS =====");
 
-        System.out.println("Most Active Member: " + topMember +
-                " (" + topMemberLoans + " loans)");
+        System.out.println("Most Active Member: " + topMemberData[0] +
+                " (" + topMemberData[1] + " loans)");
 
-        System.out.println("Most Borrowed Book: " + mostBorrowedBook +
-                " (" + mostBorrowedCount + " times)");
+        System.out.println("Most Borrowed Book: " + mostBorrowedData[0] +
+                " (" + mostBorrowedData[1] + " times)");
 
         System.out.println("System successfully simulated 14 days of library activity.");
 
